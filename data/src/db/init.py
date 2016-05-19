@@ -1,23 +1,16 @@
 import MySQLdb
 import MySQLdb.cursors
-
 # Naming rule:
 # table : User, Table, User_action
 # column : user, table, user_action
+import sys
+sys.path.append("..")
+import config.config as cfg
 
-# Database configuration
-HOST = 'localhost'
-USER = 'root'
-PASSWORD = '000242'
-DBNAME = 'tianchi_music'
-
-# File
-USER_ACTIONS = '/Users/wangyifan/workspace/python_workspace/tianchi/music/data/original/mars_tianchi_user_actions.csv'
-SONGS = '/Users/wangyifan/workspace/python_workspace/tianchi/music/data/original/mars_tianchi_songs.csv'
 # Connect
 print "Connecting to the database..."
-conn = MySQLdb.connect ( host = HOST, user = USER,\
-                        passwd =PASSWORD,\
+conn = MySQLdb.connect ( host = cfg.HOST, user = cfg.USER,\
+                        passwd = cfg.PASSWORD,\
                          charset='utf8')
 print "Connected."
 # Get cursor
@@ -57,7 +50,7 @@ print "Openning files..."
 
 count = cur.execute("SELECT * FROM User_actions limit 5")
 if count == 0:
-    user_actions_lines = open(USER_ACTIONS, 'r').readlines()
+    user_actions_lines = open(cfg.USER_ACTIONS, 'r').readlines()
     print "Writing user actions..."
     for line in user_actions_lines:
         data = line.split(',')
@@ -68,7 +61,7 @@ if count == 0:
 
 count = cur.execute("SELECT * FROM Songs LIMIT 5")
 if count == 0:
-    songs_lines = open(SONGS, 'r').readlines()
+    songs_lines = open(cfg.SONGS, 'r').readlines()
     print "Writing songs..."
     for line in songs_lines:
         data = line.split(',')
