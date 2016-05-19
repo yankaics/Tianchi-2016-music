@@ -7,8 +7,8 @@ import MySQLdb.cursors
 
 # Database configuration
 HOST = 'localhost'
-USER = ''
-PASSWORD = ''
+USER = 'root'
+PASSWORD = '000242'
 DBNAME = 'tianchi_music'
 
 # File
@@ -24,7 +24,7 @@ print "Connected."
 cur = conn.cursor(MySQLdb.cursors.DictCursor)
 
 # Create database
-# cur.execute('DROP DATABASE IF EXISTS tianchi_music')
+cur.execute('DROP DATABASE IF EXISTS tianchi_music')
 
 cur.execute('CREATE DATABASE IF NOT EXISTS tianchi_music')
 conn.select_db('tianchi_music')
@@ -34,8 +34,8 @@ print "Database tianchi_music is created and selected."
 # Create user actions table
 cur.execute('create table if not exists User_actions(\
 `id` int not null auto_increment primary key,\
-`user_id` varchar(50) not null,\
-`song_id` varchar(50) not null,\
+`user_id` char(32) not null,\
+`song_id` char(32) not null,\
 `gmt_create` int not null,\
 `action_type` int not null,\
 `ds` date not null )')
@@ -44,8 +44,8 @@ print "Table User_actions created."
 
 cur.execute('create table if not exists Songs(\
 `id` int not null auto_increment primary key,\
-`song_id` varchar(50) not null,\
-`artist_id` varchar(50) not null,\
+`song_id` char(32) not null,\
+`artist_id` char(32) not null,\
 `publish_time` date not null,\
 `song_init_plays` int not null,\
 `language` int not null,\
@@ -76,6 +76,13 @@ if count == 0:
         cur.execute("insert into Songs(song_id, artist_id, publish_time, song_init_plays, language, gender) values (%s, %s, %s, %s, %s, %s)", (data[0], data[1], data[2], data[3], data[4], data[5]))
         conn.commit()
     print "Songs data added."
+
+print "Start creating index..."
+cur.execute("create index user_id_idx on User_actions(user_id);")
+cur.execute("create index user_actions_song_id_idx on User_actions(song_id);")
+cur.execute("create index songs_song_id_idx on Songs(song_id);")
+cur.execute("create index songs_artist_id_idx on Songs(artist_id);")
+conn.commit()
 
 cur.close()
 conn.close()
