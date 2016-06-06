@@ -130,7 +130,7 @@ dim_feature_1 = 19
 #   [15,day]: singer gender 1 if 1 # M
 #   [16,day]: singer gender 1 if 2 # F
 #   [17,day]: singer gender 1 if 3 # Band
-#   [18,day]: singer's total song number
+#   #[18,day]: singer's total song number
 #
 #========================================================
 
