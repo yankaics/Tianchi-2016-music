@@ -22,7 +22,7 @@ Popular Music Prediction - Tianchi Big Data Challenge 2016
 1. Add `__init__.py` and `config.py` to `config` directory, set the following variables:
  * `HOST` your database host
  * `USER` your database username ( use `mysql -u USER -p` to log in )
- * `PASSWPRD` password
+ * `PASSWORD` password
  * `DBNAME` the name of database ( use `use DBNAME` to select the database )
  * `ROOT` root path of git repository
  * `USER_ACTIONS` the path of `mars_tianchi_user_actions.csv` 
