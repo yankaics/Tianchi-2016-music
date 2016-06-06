@@ -2,10 +2,9 @@
 #   Extract daily information for every artist.
 #   
 #   Structure:
-#
-#   artist_id,play,download,collect,play_user,download_user,collect_user,ds,gmt_create
-#   play_user: the number of users that play the music of the artist
-#   Order by artist_id, ds, gmt_create
+#   
+#   artist_id,date,play/download/collect
+#   Order by artist_id, ds
 #
 
 import MySQLdb, config.config as cfg
