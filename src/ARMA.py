@@ -49,7 +49,7 @@ for i in range(60):
     dates.append((datetime.datetime(2015,9,1) + datetime.timedelta(days = i)).strftime("%Y%m%d"))
 
 
-output = open('linreg_mars_tianchi_artist_plays_predict.csv','w')
+output = open('ARMA_mars_tianchi_artist_plays_predict.csv','w')
 
 for artist in artists:
     print artist, len(daily_play[artist])
