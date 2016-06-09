@@ -59,6 +59,7 @@ for line in daily_down_f.readlines():
     # given data of first 6 months (183 days), predict the data of next 2 months (60 days)
     daily_down[l[0]][datestr.index(l[1])] = (int(l[2]))
 daily_down_f.close()
+cp.dump(daily_down,open(cp_path+'cp_daily_down.txt','w'))
 
 # Missing value = 0
 #for artist in artists:
@@ -85,6 +86,7 @@ for line in daily_col_f.readlines():
     # given data of first 6 months (183 days), predict the data of next 2 months (60 days)
     daily_col[l[0]][datestr.index(l[1])] = (int(l[2]))
 daily_col_f.close()
+cp.dump(daily_col,open(cp_path+'cp_daily_col.txt','w'))
 
 # Missing value = value of the day before
 #for artist in artists:
@@ -102,6 +104,8 @@ daily_col_f.close()
 future_dates = []
 for i in range(60):
     future_dates.append((datetime.datetime(2015,9,1) + datetime.timedelta(days = i)).strftime("%Y%m%d"))
+
+cp.dump(future_dates,open(cp_path+'cp_future_dates.txt','w'))
 # use the previous input_days days to predict the next 60 days
 
 

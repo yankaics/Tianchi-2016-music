@@ -18,9 +18,9 @@ conn = MySQLdb.connect ( host = cfg.HOST, user = cfg.USER,\
 print "Connected."
 # Get cursor
 cur = conn.cursor(MySQLdb.cursors.DictCursor)
-conn.select_db('tianchi_music')
+conn.select_db(cfg.DBNAME)
 
-print "Start executing sql_highest_play"
+print "Start executing sql_sum"
 cur.execute(sql_sum)
 play = open(cfg.ROOT + '/data/derived/singers/artist_sum.txt', 'w') 
 dates = []

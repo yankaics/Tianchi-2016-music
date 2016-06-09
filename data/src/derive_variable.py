@@ -117,6 +117,6 @@ def generate_artist_info():
 # generate_song_list()
 
 # 2.
-#generate_days()
+generate_days()
 
 generate_artist_list()
