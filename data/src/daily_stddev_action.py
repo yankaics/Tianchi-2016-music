@@ -21,7 +21,7 @@ conn = MySQLdb.connect ( host = cfg.HOST, user = cfg.USER,\
 print "Connected."
 # Get cursor
 cur = conn.cursor(MySQLdb.cursors.DictCursor)
-conn.select_db('tianchi_music')
+conn.select_db(cfg.DBNAME)
 
 print "Start executing sql_user_play"
 cur.execute(sql_play)

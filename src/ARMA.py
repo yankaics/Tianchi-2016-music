@@ -57,7 +57,7 @@ for artist in artists:
     dates_str = sm.tsa.datetools.date_range_str('2005m1',length=l)
     dates_all = sm.tsa.datetools.dates_from_range('2005m1', length=len(daily_play[artist]))
     y = pd.Series(daily_play[artist], index=dates_all)
-    arma_mod = sm.tsa.ARMA(y, order=(12,0))
+    arma_mod = sm.tsa.ARMA(y, order=(5,0))
     arma_res = arma_mod.fit(trend='nc', disp=-1)
     plt.figure(1)
     forecast, fcerr, conf_int = arma_res.forecast(steps =  60)

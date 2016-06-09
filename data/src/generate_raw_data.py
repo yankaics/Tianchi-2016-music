@@ -6,15 +6,18 @@ import matplotlib
 import statsmodels.api as sm
 import pandas as pd
 import config.config as cfg
+import cPickle as cp
 
-
+cp_path = cfg.ROOT + '/src/'
 output_days = 60
 all_days = 183
 # date strig: 20150304
 datestr_l = open(cfg.ROOT + '/data/derived/days_list.txt','r').readlines()
 datestr = [x.strip().split(',')[0] for x in datestr_l]
+cp.dump(datestr,open(cp_path+'cp_datestr.txt','w'))
 artists_l = open(cfg.ROOT + '/data/derived/artist_list.txt','r').readlines()
 artists = [x.strip() for x in artists_l]
+cp.dump(artists,open(cp_path+'cp_artists.txt','w'))
 #============================ build daily play data =======================
 #
 daily_play_f = open(cfg.ROOT + '/data/derived/singers/daily_play.txt','r')
@@ -29,6 +32,7 @@ for line in daily_play_f.readlines():
     # given data of first 6 months (183 days), predict the data of next 2 months (60 days)
     daily_play[l[0]][datestr.index(l[1])] = (int(l[2]))
 daily_play_f.close()
+cp.dump(daily_play,open(cp_path + 'cp_daily_play.txt','w'))
 
 # Missing value = 0
 #for artist in artists:
@@ -140,19 +144,19 @@ dim_feature_1 = 19
 # all_days = 183
 #for day in input_days_1:
 #    raw_input_singer_matrix_train
-
+raw_data_singer_matrix_train = {}
 for artist in artists:
     raw_data_singer_matrix_train[artist] = np.zeros([dim_feature_1,all_days])
     # 0. daily_play
-    for day in range(len(all_days)):
+    for day in range(all_days):
         raw_data_singer_matrix_train[artist][0,day] = daily_play[artist][day]
 
     # 0. daily_download
-    for day in range(len(all_days)):
+    for day in range(all_days):
         raw_data_singer_matrix_train[artist][1,day] = daily_play[artist][day]
 
     # 0. daily_collect
-    for day in range(len(all_days)):
+    for day in range(all_days):
         raw_data_singer_matrix_train[artist][2,day] = daily_play[artist][day]
 
 

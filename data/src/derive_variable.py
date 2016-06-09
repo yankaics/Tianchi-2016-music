@@ -9,7 +9,7 @@
 # Language  String  数字表示1,2,3…  100
 # Gender  String  1,2,3  1
 
-tc_songs_file = open('/Users/wangyifan/workspace/python_workspace/tianchi/music/data/original/mars_tianchi_songs.csv', 'r')
+tc_songs_file = open('/Users/wangyifan/workspace/python_workspace/tianchi/music/data/original/p2_mars_tianchi_songs.csv', 'r')
 tc_songs_lines = tc_songs_file.readlines()
 tc_songs = [x.strip('\n').split(',') for x in tc_songs_lines]
 
@@ -24,7 +24,7 @@ for tc_song in tc_songs:
 # 2. gmt_create  String  用户播放时间（unix时间戳表示）精确到小时  1426406400
 # 3. action_type  String  行为类型：1，播放；2，下载，3，收藏  1
 # 4. Ds  String  记录收集日（分区）  20150315
-tc_users_file = open('/Users/wangyifan/workspace/python_workspace/tianchi/music/data/original/mars_tianchi_user_actions.csv', 'r')
+tc_users_file = open('/Users/wangyifan/workspace/python_workspace/tianchi/music/data/original/p2_mars_tianchi_user_actions.csv', 'r')
 tc_users_lines = tc_users_file.readlines()
 tc_users = [x.strip('\n').split(',') for x in tc_users_lines]
 
@@ -42,7 +42,7 @@ def generate_artist_list():
     print "Generating singer list"
     artist_list_file = open('/Users/wangyifan/workspace/python_workspace/tianchi/music/data/derived/artist_list.txt', 'w')
     for line in tc_songs:
-        artist = line.split(',')[1]
+        artist = line[1]
         if artist not in artist_list:
             artist_list.append(artist)
             artist_list_file.write(artist + '\n')
@@ -67,7 +67,7 @@ def generate_days():
     print "finish"
 
 
-def generate_artists_info():
+def generate_artist_info():
     print "Start generating artists information"
     artists = open('/Users/wangyifan/workspace/python_workspace/tianchi/music/data/derived/artist_list.txt', 'r').readlines()
     days = open('/Users/wangyifan/workspace/python_workspace/tianchi/music/data/derived/days_list.txt', 'r').readlines()
@@ -117,6 +117,6 @@ def generate_artists_info():
 # generate_song_list()
 
 # 2.
-generate_days()
+#generate_days()
 
-generate_artists_info()
+generate_artist_list()

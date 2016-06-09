@@ -17,10 +17,10 @@ print "Connected."
 cur = conn.cursor(MySQLdb.cursors.DictCursor)
 
 # Create database
-cur.execute('DROP DATABASE IF EXISTS tianchi_music')
+#cur.execute('DROP DATABASE IF EXISTS tianchi_music')
 
-cur.execute('CREATE DATABASE IF NOT EXISTS tianchi_music')
-conn.select_db('tianchi_music')
+cur.execute('CREATE DATABASE IF NOT EXISTS p2_tianchi_music')
+conn.select_db(cfg.DBNAME)
 
 print "Database tianchi_music is created and selected."
 
