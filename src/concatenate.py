@@ -1,6 +1,6 @@
 import cPickle as cp
 import matplotlib.pyplot as plt
-prediction_l = open('p2_R_ARIMA_result.csv', 'r').readlines()
+prediction_l = open('p2_ets_result_2.csv', 'r').readlines()
 # use cPickle.load(<file>) to load object from a file
 artists = cp.load(open('cp_artists.txt','r'))
 daily_play = cp.load(open('cp_daily_play.txt'))
@@ -24,6 +24,10 @@ while True:
         plt.cla()
         artist = artists[int(q)-1]
         plt.plot(range(len(daily_play[artist])),daily_play[artist])
+        i = 0
+        for date in datestr:
+            print date,daily_play[artist][i]
+            i += 1
         plt.plot(range(len(daily_play[artist]),len(daily_play[artist]) + 60),prediction[artist], color='red')
         plt.show()
     

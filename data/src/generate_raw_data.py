@@ -109,6 +109,37 @@ cp.dump(future_dates,open(cp_path+'cp_future_dates.txt','w'))
 # use the previous input_days days to predict the next 60 days
 
 
+# num of users play ...
+num_user_play_f = open(cfg.ROOT + '/data/derived/singers/daily_number_user_play.txt','r')
+num_user_play = {}
+for artist in artists:
+    num_user_play[artist] = [0] * len(datestr)
+for line in num_user_play_f.readlines():
+    l = line.strip().split('\t')
+    num_user_play[l[0]][datestr.index(l[1].replace('-',''))] = int(l[2])
+
+
+# num of users download ...
+num_user_down_f = open(cfg.ROOT + '/data/derived/singers/daily_number_user_download.txt','r')
+num_user_down = {}
+for artist in artists:
+    num_user_down[artist] = [0] * len(datestr)
+for line in num_user_down_f.readlines():
+    l = line.strip().split('\t')
+    num_user_down[l[0]][datestr.index(l[1].replace('-',''))] = int(l[2])
+
+
+
+# num of users collect ...
+num_user_col_f = open(cfg.ROOT + '/data/derived/singers/daily_number_user_collect.txt','r')
+num_user_col = {}
+for artist in artists:
+    num_user_col[artist] = [0] * len(datestr)
+for line in num_user_col_f.readlines():
+    l = line.strip().split('\t')
+    num_user_col[l[0]][datestr.index(l[1].replace('-',''))] = int(l[2])
+print num_user_col
+
 
 
 

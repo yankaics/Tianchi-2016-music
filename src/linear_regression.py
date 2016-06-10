@@ -35,7 +35,7 @@ for i in range(60):
 print dates
 
 
-output = open('linreg_mars_tianchi_artist_plays_predict.csv','w')
+output = open('p2_linreg_result_2.csv','w')
 # predict
 for artist in artists:
     tmp = copy.deepcopy(daily_play[artist])
