@@ -134,17 +134,73 @@ for line in num_user_down_f.readlines():
 num_user_col_f = open(cfg.ROOT + '/data/derived/singers/daily_number_user_collect.txt','r')
 num_user_col = {}
 for artist in artists:
-    num_user_col[artist] = [0] * len(datestr)
+    num_user_col[artist] = [0.0] * len(datestr)
 for line in num_user_col_f.readlines():
     l = line.strip().split('\t')
     num_user_col[l[0]][datestr.index(l[1].replace('-',''))] = int(l[2])
-print num_user_col
 
+
+# avg of songs play ...
+avg_song_play_f = open(cfg.ROOT + '/data/derived/singers/daily_avg_song_play.txt','r')
+avg_song_play = {}
+for artist in artists:
+    avg_song_play[artist] = [0.0] * len(datestr)
+for line in avg_song_play_f.readlines():
+    l = line.strip().split('\t')
+    avg_song_play[l[0]][datestr.index(l[1].replace('-',''))] = float(l[2])
+
+# avg of songs download ...
+avg_song_down_f = open(cfg.ROOT + '/data/derived/singers/daily_avg_song_download.txt','r')
+avg_song_down = {}
+for artist in artists:
+    avg_song_down[artist] = [0] * len(datestr)
+for line in avg_song_down_f.readlines():
+    l = line.strip().split('\t')
+    avg_song_down[l[0]][datestr.index(l[1].replace('-',''))] = float(l[2])
+
+
+# avg of songs collect ...
+avg_song_col_f = open(cfg.ROOT + '/data/derived/singers/daily_avg_song_collect.txt','r')
+avg_song_col = {}
+for artist in artists:
+    avg_song_col[artist] = [0.0] * len(datestr)
+for line in avg_song_col_f.readlines():
+    l = line.strip().split('\t')
+    avg_song_col[l[0]][datestr.index(l[1].replace('-',''))] = float(l[2])
+
+
+# stddev of songs play ...
+stddev_song_play_f = open(cfg.ROOT + '/data/derived/singers/daily_stddev_song_play.txt','r')
+stddev_song_play = {}
+for artist in artists:
+    stddev_song_play[artist] = [0.0] * len(datestr)
+for line in avg_song_play_f.readlines():
+    l = line.strip().split('\t')
+    avg_song_play[l[0]][datestr.index(l[1].replace('-',''))] = float(l[2])
+
+# stddev of songs download ...
+stddev_song_down_f = open(cfg.ROOT + '/data/derived/singers/daily_stddev_song_download.txt','r')
+stddev_song_down = {}
+for artist in artists:
+    stddev_song_down[artist] = [0.0] * len(datestr)
+for line in stddev_song_down_f.readlines():
+    l = line.strip().split('\t')
+    stddev_song_down[l[0]][datestr.index(l[1].replace('-',''))] = float(l[2])
+
+
+# stddev of songs collect ...
+stddev_song_col_f = open(cfg.ROOT + '/data/derived/singers/daily_stddev_song_collect.txt','r')
+stddev_song_col = {}
+for artist in artists:
+    stddev_song_col[artist] = [0.0] * len(datestr)
+for line in stddev_song_col_f.readlines():
+    l = line.strip().split('\t')
+    stddev_song_col[l[0]][datestr.index(l[1].replace('-',''))] = float(l[2])
 
 
 
 input_days_1 = 60
-dim_feature_1 = 19
+dim_feature_1 = 12
 # 1. raw_data_singer_matrix_train: {singer_id: matrix} matrix if of 183 days 
 #    data_singer_matrix_train: list of tuples(input,output)
 #    input_singer_matrix_train 
@@ -157,18 +213,18 @@ dim_feature_1 = 19
 #   [3,day]: the number of users who play songs of the singer
 #   [4,day]: the number of users who download songs of the singer
 #   [5,day]: the number of users who collect songs of the singer
-#   [6,day]: the avg of songs play
+#   [6,day]: the avg of songs play !!! doesn't contain those count = 0
 #   [7,day]: the avg of songs download
 #   [8,day]: the avg of songs collect
 #   [9,day]: the stddev of songs play
-#   [10,day]: the stddev of songs download
-#   [11,day]: the stddev of songs collect
-#   [12,day]: highest played song's play 
-#   [13,day]: highest played song's download 
-#   [14,day]: highest played song's collect
-#   [15,day]: singer gender 1 if 1 # M
-#   [16,day]: singer gender 1 if 2 # F
-#   [17,day]: singer gender 1 if 3 # Band
+#   [10,day]: the stddev of songs download 
+#   [11,day]: the stddev of songs collect !!! doesn't contain those count = 0
+#   #[12,day]: highest played song's play 
+#   #[13,day]: highest played song's download 
+#   #[14,day]: highest played song's collect
+#   #[15,day]: singer gender 1 if 1 # M
+#   #[16,day]: singer gender 1 if 2 # F
+#   #[17,day]: singer gender 1 if 3 # Band
 #   #[18,day]: singer's total song number
 #
 #========================================================
@@ -186,13 +242,61 @@ for artist in artists:
     for day in range(all_days):
         raw_data_singer_matrix_train[artist][0,day] = daily_play[artist][day]
 
-    # 0. daily_download
+    # 1. daily_download
     for day in range(all_days):
         raw_data_singer_matrix_train[artist][1,day] = daily_play[artist][day]
 
-    # 0. daily_collect
+    # 2. daily_collect
     for day in range(all_days):
         raw_data_singer_matrix_train[artist][2,day] = daily_play[artist][day]
+
+    # 3. num_user_play
+    for day in range(all_days):
+        raw_data_singer_matrix_train[artist][3,day] = num_user_play[artist][day]
+
+
+    # 4. num_user_down
+    for day in range(all_days):
+        raw_data_singer_matrix_train[artist][4,day] = num_user_down[artist][day]
+
+
+    # 5. num_user_col
+    for day in range(all_days):
+        raw_data_singer_matrix_train[artist][5,day] = num_user_col[artist][day]
+
+
+    # 6. avg_song_play
+    for day in range(all_days):
+        raw_data_singer_matrix_train[artist][6,day] = avg_song_play[artist][day]
+
+
+    # 7. avg_song_down
+    for day in range(all_days):
+        raw_data_singer_matrix_train[artist][7,day] = avg_song_down[artist][day]
+
+
+    # 8. avg_song_col
+    for day in range(all_days):
+        raw_data_singer_matrix_train[artist][8,day] = avg_song_col[artist][day]
+
+
+    # 6. stddev_song_play
+    for day in range(all_days):
+        raw_data_singer_matrix_train[artist][9,day] = stddev_song_play[artist][day]
+
+
+    # 7. stddev_song_down
+    for day in range(all_days):
+        raw_data_singer_matrix_train[artist][10,day] = stddev_song_down[artist][day]
+
+
+    # 8. stddev_song_col
+    for day in range(all_days):
+        raw_data_singer_matrix_train[artist][11,day] = stddev_song_col[artist][day]
+
+
+cp.dump(raw_data_singer_matrix_train,open(cp_path+'cp_raw_data_matirx.txt','w'))
+
 
 
 
