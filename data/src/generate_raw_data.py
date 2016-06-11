@@ -174,9 +174,9 @@ stddev_song_play_f = open(cfg.ROOT + '/data/derived/singers/daily_stddev_song_pl
 stddev_song_play = {}
 for artist in artists:
     stddev_song_play[artist] = [0.0] * len(datestr)
-for line in avg_song_play_f.readlines():
+for line in stddev_song_play_f.readlines():
     l = line.strip().split('\t')
-    avg_song_play[l[0]][datestr.index(l[1].replace('-',''))] = float(l[2])
+    stddev_song_play[l[0]][datestr.index(l[1].replace('-',''))] = float(l[2])
 
 # stddev of songs download ...
 stddev_song_down_f = open(cfg.ROOT + '/data/derived/singers/daily_stddev_song_download.txt','r')
@@ -280,21 +280,21 @@ for artist in artists:
         raw_data_singer_matrix_train[artist][8,day] = avg_song_col[artist][day]
 
 
-    # 6. stddev_song_play
+    # 9. stddev_song_play
     for day in range(all_days):
         raw_data_singer_matrix_train[artist][9,day] = stddev_song_play[artist][day]
 
 
-    # 7. stddev_song_down
+
+    # 10. stddev_song_down
     for day in range(all_days):
         raw_data_singer_matrix_train[artist][10,day] = stddev_song_down[artist][day]
 
 
-    # 8. stddev_song_col
+    # 11. stddev_song_col
     for day in range(all_days):
         raw_data_singer_matrix_train[artist][11,day] = stddev_song_col[artist][day]
-
-
+print raw_data_singer_matrix_train[artists[1]][9,:] 
 cp.dump(raw_data_singer_matrix_train,open(cp_path+'cp_raw_data_matrix.txt','w'))
 
 
