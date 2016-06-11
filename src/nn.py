@@ -3,53 +3,57 @@ import sklearn
 from sklearn.cluster import KMeans
 import keras
 import matplotlib.pyplot as plt
-# Settings 
+from keras.models import Sequential
+from keras.layers import Dense, Activation, LSTM
+import cPickle as cp
 
-dim_input = 60
-dim_hidden = 10
-dim_output = 60
-lam = 0.001
-restart = True
-daily_play_f = open(cfg.ROOT + '/data/derived/singers/daily_play.txt','r')
-artists = []
-daily_play = {}
-train_input= []
-train_output= []
-test_input = []
+# 1. raw_data_singer_matrix_train: {singer_id: matrix} matrix if of 183 days 
+#    data_singer_matrix_train: list of tuples(input,output)
+#    input_singer_matrix_train 
+#    => output_singer_matrix_train
+#   Each singer has a feature matrix, each column is the feature of one single day
+#   .shape = (dim_feature_1,input_days_1)
+#   [0,day]: daily play
+#   [1,day]: daily download
+#   [2,day]: daily collect
+#   [3,day]: the number of users who play songs of the singer
+#   [4,day]: the number of users who download songs of the singer
+#   [5,day]: the number of users who collect songs of the singer
+#   [6,day]: the avg of songs play !!! doesn't contain those count = 0
+#   [7,day]: the avg of songs download
+#   [8,day]: the avg of songs collect
+#   [9,day]: the stddev of songs play
+#   [10,day]: the stddev of songs download 
+#   [11,day]: the stddev of songs collect !!! doesn't contain those count = 0
+#   #[12,day]: highest played song's play 
+#   #[13,day]: highest played song's download 
+#   #[14,day]: highest played song's collect
+#   #[15,day]: singer gender 1 if 1 # M
+#   #[16,day]: singer gender 1 if 2 # F
+#   #[17,day]: singer gender 1 if 3 # Band
+#   #[18,day]: singer's total song number
+#
+#========================================================
 
-print "Read data"
-for line in daily_play_f.readlines():
-    l = line.strip().split('\t')
-    # 0:id  1:date  2:play
-    # given data of first 6 months (183 days), predict the data of next 2 months (60 days)
-    if l[0] not in artists:
-        daily_play[l[0]] = [int(l[2])]
-        artists.append(l[0])
-    else:
-        daily_play[l[0]].append(int(l[2]))
-daily_play_f.close()
+# Settings
+input_
 
 
-# build input & output set
-print "Build input & output set"
-for artist in artists:
-   # print "Artist id: ",artist
-    l = len(daily_play[artist])
-    begin = 0
-    while begin + 120 <= l:
-        # l == 183
-        min_log = np.log(min(daily_play[artist][begin:begin+dim_input]))
-        max_log = np.log(max(daily_play[artist][begin:begin+dim_input]))
-        diff = max_log - min_log
-        input_all.append([(np.log(x)-min_log)/diff for x in daily_play[artist][begin:begin+60]])
-        output_all.append([(np.log(x)-min_log)/diff for x in daily_play[artist][begin+60:begin+120]])
-        begin += 1
+# prepare data
 
-size_input = len(input_all) # should be 64 * 50
-size_output = len(output_all) # should also be 64 * 50
+raw_data_matrix = cp.load(open('cp_raw_data_matrix.txt','r'))`:w
 
-size_test = 500
-size_train = size_input - size_test 
 
-X = np.array(input_all[0:size_train]).T
-Y = np.array(output_all[0:size_train]).T
+
+# Model Settings 
+model = Sequential()
+# output_dim = 5; input_length/time_step = 10; input_dim = 11
+model.add(LSTM(30, batch_input_shape=(None, 10, 11), dropout_W = .2, return_sequences=False)
+model.add(Dense(
+model.add(Activation('relu'))
+
+
+
+
+
+

@@ -295,7 +295,7 @@ for artist in artists:
         raw_data_singer_matrix_train[artist][11,day] = stddev_song_col[artist][day]
 
 
-cp.dump(raw_data_singer_matrix_train,open(cp_path+'cp_raw_data_matirx.txt','w'))
+cp.dump(raw_data_singer_matrix_train,open(cp_path+'cp_raw_data_matrix.txt','w'))
 
 
 
