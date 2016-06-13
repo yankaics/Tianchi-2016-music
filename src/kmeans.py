@@ -66,9 +66,10 @@ for artist in artists:
 batch_size = 800
 data_dim = 1
 output_size = 60
-skip = 13 # diff of start indexs of 2 time series, skip=2 => 0,2,4,6...
-timesteps = 15
+skip = 10 # diff of start indexs of 2 time series, skip=2 => 0,2,4,6...
+timesteps = 20
 input_length = timesteps * 1      # if we have 3 daily features, then it's timesteps * 3
+cls_length = 10 # number of features
 all_size = (183 -(timesteps + output_size-1) - 1 )/skip + 1
 print "Num of samples: ",all_size * 100
 train_size = min(2000,all_size) # 94
@@ -77,26 +78,9 @@ train_size_all = train_size * 100 # num of training instances, train a model wit
 test_size = all_size - train_size
 test_size_all = test_size * 100  # 1
 
-def smooth(x,window_len=11,window='hanning'):
-    if x.ndim != 1:
-        raise ValueError, "smooth only accepts 1 dimension arrays."
-    if x.size < window_len:
-        raise ValueError, "Input vector needs to be bigger than window size."
-    if window_len<3:
-        return x
-    if not window in ['flat', 'hanning', 'hamming', 'bartlett', 'blackman']:
-        raise ValueError, "Window is on of 'flat', 'hanning', 'hamming', 'bartlett', 'blackman'"
-    s=np.r_[2*x[0]-x[window_len-1::-1],x,2*x[-1]-x[-1:-window_len:-1]]
-    if window == 'flat': #moving average
-        w=np.ones(window_len,'d')
-    else:  
-        w=eval('np.'+window+'(window_len)')
-    y=np.convolve(w/w.sum(),s,mode='same')
-    return y[window_len:-window_len+1]
-
 
 x_train = np.zeros([train_size_all, input_length, data_dim])
-x_cls = np.zeros([train_size_all, input_length]) # n_sample, n_feature
+x_cls = np.zeros([train_size_all, cls_length]) # n_sample, n_feature
 x_cls_origin = np.zeros([train_size_all, input_length]) # n_sample, n_feature
 y_train = np.zeros([train_size_all, output_size])
 x_test = np.zeros([test_size_all, input_length, data_dim])
@@ -105,43 +89,32 @@ for k in range(100):
     test_artist = artists[k]
     for i in range(train_size):
         col = input_daily_play[test_artist][i*skip:i*skip+timesteps,0]
-        col_s = col
-        x_cls[k*train_size+i,:] = ((col_s)/np.sqrt((col_s.T.dot(col_s))))**1.5#/np.log(max(col)+2)
+        col_s = ((col)/np.sqrt((col.T.dot(col))))
+        f1 = np.sum(col_s[-1:])/len(col_s[-1:])
+        f2 = np.sum(col_s[-2:])/len(col_s[-2:])
+        f3 = np.sum(col_s[-3:])/len(col_s[-3:])
+        f4 = np.sum(col_s[-5:])/len(col_s[-5:])
+        f5 = np.sum(col_s[-7:])/len(col_s[-7:])
+        f6 = np.std(col_s[-1:])
+        f7 = np.std(col_s[-2:])
+        f8 = np.std(col_s[-3:])
+        f9 = np.std(col_s[-5:])
+        f10 = np.std(col_s[-7:])
+        x_cls[k*train_size+i,:] = np.array([f1,f2,f3,f4,f5,f6,f7,f8,f9,f10])#((col_s)/np.sqrt((col_s.T.dot(col_s))))#/np.log(max(col)+2)
         x_cls_origin[k*train_size+i,:] = col#/np.log(max(col)+2)
-#        y_train[k*train_size+i,:] = input_daily_play[test_artist][i+timesteps:i+timesteps+output_size,0]
- #       x_train[k*train_size+i,:] = np.vstack((input_daily_play[test_artist][i:i+timesteps,0].reshape([timesteps,1]),input_stddev_play[test_artist][i:i+timesteps,0].reshape([timesteps,1])) )
-#        y_train[k*train_size+i,:] = input_daily_play[test_artist][i+timesteps:i+timesteps+output_size,0]
-
-
-
-
-
-#for j in range(test_size):
-#    i = j+train_size
-#    x_test[k*test_size+j,:,:] = input_daily_play[test_artist][i:i+timesteps,0].reshape([timesteps,1])
-#    y_test[k*test_size+j,:] = input_daily_play[test_artist][i+timesteps:i+timesteps+output_size,0]
-
-#for k in range(100):
-#    test_artist = artists[k]
-#    plt.cla()
-#    X = np.zeros([batch_size, input_length, data_dim])
-#    X[0,:,:] = np.vstack((input_daily_play[test_artist][-timesteps:,0].reshape([timesteps,1]),input_daily_col[test_artist][-timesteps:,0].reshape([timesteps,1]),input_stddev_play[test_artist][-timesteps:,0].reshape([timesteps,1])))
-#    for kk in range(batch_size):
-#        X[kk,:,:] = np.vstack((input_daily_play[test_artist][-timesteps:,0].reshape([timesteps,1]),input_stddev_play[test_artist][-timesteps:,0].reshape([timesteps,1])))
-
 
 # PCA 
 
 pca=PCA(n_components=2)
 newData=pca.fit_transform(x_cls)
-#import pylab as pl
+import pylab as pl
 #pl.scatter(newData[:,0],newData[:,1])
-
-
+#pl.show()
+#exit()
 
 random_state = 170
 print "Start clustering"
-n_clusters = 20
+n_clusters = 10
 y_pred = KMeans(n_clusters=n_clusters ).fit_predict(x_cls)
 print y_pred
 fig = plt.figure(1)
