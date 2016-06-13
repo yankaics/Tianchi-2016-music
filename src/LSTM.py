@@ -61,10 +61,10 @@ for artist in artists:
 
 print raw_data_matrix[artists[1]][9,:]
 # Settings
-batch_size = 10
+batch_size = 800
 data_dim = 1
 output_size = 60
-timesteps = 60
+timesteps = 100
 input_length = timesteps * 2      # if we have 3 daily features, then it's timesteps * 3
 all_size = 183 -(timesteps + output_size-1)
 train_size = min(95,all_size) # 94
@@ -77,12 +77,10 @@ test_size_all = test_size * 100  # 1
 # Model Settings 
 model = Sequential()
 # output_dim = 5; input_length/time_step = 10; data_dim = 11
-model.add(LSTM(60, batch_input_shape=(batch_size, input_length , data_dim),init='glorot_normal', return_sequences=False,stateful=True))
+model.add(LSTM(240, batch_input_shape=(batch_size, input_length , data_dim),init='glorot_normal', return_sequences=False,stateful=True))
 #model.add((AveragePooling1D(batch_input_shape=(batch_size, input_length , data_dim))))
-model.add(Dense(80, init='glorot_normal'))
-model.add(Activation('linear'))
-model.add(Dense(80, init='glorot_normal'))
-model.add(Activation('softplus'))
+#model.add(Dense(640, init='glorot_normal'))
+#model.add(Activation('softplus'))
 model.add(Dense(60, init='glorot_normal'))
 model.add(Activation('softplus'))
 model.compile(loss="mape", optimizer=keras.optimizers.RMSprop(lr=0.00001, rho=0.9, epsilon=1e-06),metrics=["accuracy"])

@@ -1,4 +1,4 @@
-filename = 'p2_stlf_result'
+filename = 'p2_arima_ensemble_40'
 print "File: ",filename
 f = open(filename + '.csv','r')
 f2 = open(filename + '_2.csv','w')
